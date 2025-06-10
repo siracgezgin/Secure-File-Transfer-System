@@ -8,7 +8,7 @@
 
 ---
 
-## 🎯 Proje Vizyonu
+## Proje Vizyonu
 
 Bu proje, **Bursa Teknik Üniversitesi Bilgisayar Mühendisliği Bölümü** bünyesinde **BLM0326 Bilgisayar Ağları Dersi** kapsamında geliştirilen, endüstriyel standartlarda bir güvenli dosya transfer çözümüdür. Modern siber güvenlik tehditlerine karşı dayanıklı, yüksek performanslı ve ölçeklenebilir bir sistem tasarımı hedeflenmiştir.
 
