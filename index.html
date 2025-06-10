@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gelişmiş Güvenli Dosya Transfer Sistemi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            text-align: center;
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .header p {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .card h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .icon {
+            width: 24px;
+            height: 24px;
+            fill: #3498db;
+        }
+
+        .file-transfer {
+            grid-column: 1 / -1;
+        }
+
+        .file-upload-area {
+            border: 3px dashed #3498db;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .file-upload-area:hover {
+            border-color: #2980b9;
+            background: rgba(52, 152, 219, 0.05);
+        }
+
+        .file-upload-area.dragover {
+            border-color: #27ae60;
+            background: rgba(39, 174, 96, 0.1);
+        }
+
+        .upload-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 15px;
+            fill: #3498db;
+        }
+
+        .security-settings {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ecf0f1;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #27ae60, #229954);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+
+        .progress-container {
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #ecf0f1;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 10px;
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #2c3e50;
+            font-weight: 500;
+            font-size: 12px;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .metric-item {
+            background: rgba(52, 152, 219, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #2980b9;
+            display: block;
+        }
+
+        .metric-label {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+
+        .status-indicators {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .status-online {
+            background: rgba(39, 174, 96, 0.2);
+            color: #27ae60;
+        }
+
+        .status-secure {
+            background: rgba(52, 152, 219, 0.2);
+            color: #3498db;
+        }
+
+        .status-encrypted {
+            background: rgba(155, 89, 182, 0.2);
+            color: #9b59b6;
+        }
+
+        .log-container {
+            height: 200px;
+            overflow-y: auto;
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .log-entry {
+            margin-bottom: 5px;
+        }
+
+        .log-info { color: #3498db; }
+        .log-success { color: #2ecc71; }
+        .log-warning { color: #f39c12; }
+        .log-error { color: #e74c3c; }
+
+        .network-chart {
+            height: 250px;
+            background: rgba(52, 152, 219, 0.05);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-placeholder {
+            color: #7f8c8d;
+            font-style: italic;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 5px;
+            border-radius: 10px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 10px 15px;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+        }
+
+        .tab.active {
+            background: rgba(255, 255, 255, 0.9);
+            color: #2c3e50;
+        }
+
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        .connection-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .connection-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #2ecc71;
+            animation: pulse 2s infinite;
+        }
+
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .bottom-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .security-settings {
+                grid-template-columns: 1fr;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🔒 Gelişmiş Güvenli Dosya Transfer Sistemi</h1>
+            <p>AES-256-EAX Şifreleme • RSA-2048 Kimlik Doğrulama • Düşük Seviyeli IP İşleme</p>
+        </div>
+
+        <!-- Main Grid -->
+        <div class="main-grid">
+            <!-- File Transfer Section -->
+            <div class="card file-transfer">
+                <h3>
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                    </svg>
+                    Dosya Transfer Merkezi
+                </h3>
+                
+                <div class="file-upload-area" onclick="document.getElementById('fileInput').click()">
+                    <svg class="upload-icon" viewBox="0 0 24 24">
+                        <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                    </svg>
+                    <h4>Dosyaları buraya sürükleyin veya tıklayın</h4>
+                    <p>Maksimum 10GB dosya boyutu desteklenir</p>
+                    <input type="file" id="fileInput" style="display: none;" multiple>
+                </div>
+
+                <div class="security-settings">
+                    <div class="form-group">
+                        <label>Şifreleme Algoritması</label>
+                        <select>
+                            <option>AES-256-EAX (Önerilen)</option>
+                            <option>AES-256-GCM</option>
+                            <option>ChaCha20-Poly1305</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Protokol Seçimi</label>
+                        <select>
+                            <option>Otomatik (TCP/UDP Hibrit)</option>
+                            <option>TCP (Güvenilir)</option>
+                            <option>UDP (Hızlı)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Sıkıştırma Algoritması</label>
+                        <select>
+                            <option>Otomatik (LZ4/ZSTD/GZIP)</option>
+                            <option>LZ4 (Hızlı)</option>
+                            <option>ZSTD (Dengeli)</option>
+                            <option>GZIP (Maksimum)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Transfer Şifresi</label>
+                        <input type="password" placeholder="Güvenli şifre girin">
+                    </div>
+                </div>
+
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 67%"></div>
+                        <div class="progress-text">Transfer İlerliyor: 67%</div>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 15px; justify-content: center; margin-top: 20px;">
+                    <button class="btn btn-success">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M8,5.14V19.14L19,12.14L8,5.14Z"/>
+                        </svg>
+                        Transfer Başlat
+                    </button>
+                    <button class="btn btn-warning">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M18,18H6V6H18V18Z"/>
+                        </svg>
+                        Duraklat
+                    </button>
+                    <button class="btn btn-danger">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"/>
+                        </svg>
+                        İptal Et
+                    </button>
+                </div>
+            </div>
+
+            <!-- Security Status -->
+            <div class="card">
+                <h3>
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,7C13.4,7 14.8,8.6 14.8,10V11H15.5C16.4,11 17,11.4 17,12V16C17,16.6 16.6,17 16,17H8C7.4,17 7,16.6 7,16V12C7,11.4 7.4,11 8,11H8.5V10C8.5,8.6 9.9,7 12,7M12,8.2C10.2,8.2 9.2,9.2 9.2,10V11H14.8V10C14.8,9.2 13.8,8.2 12,8.2Z"/>
+                    </svg>
+                    Güvenlik Durumu
+                </h3>
+
+                <div class="status-indicators">
+                    <div class="status-item status-online">
+                        <div class="connection-dot"></div>
+                        Bağlantı Aktif
+                    </div>
+                    <div class="status-item status-secure">
+                        🔐 Şifrelenmiş
+                    </div>
+                    <div class="status-item status-encrypted">
+                        ✓ Doğrulanmış
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>RSA Anahtar Durumu</label>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style="flex: 1; background: #ecf0f1; height: 10px; border-radius: 5px;">
+                            <div style="width: 100%; height: 100%; background: #2ecc71; border-radius: 5px;"></div>
+                        </div>
+                        <span style="color: #2ecc71; font-weight: bold;">2048-bit ✓</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Sertifika Geçerliliği</label>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style="flex: 1; background: #ecf0f1; height: 10px; border-radius: 5px;">
+                            <div style="width: 85%; height: 100%; background: #3498db; border-radius: 5px;"></div>
+                        </div>
+                        <span style="color: #3498db; font-weight: bold;">342 gün</span>
+                    </div>
+                </div>
+
+                <div class="connection-status">
+                    <strong>Son Güvenlik Taraması:</strong>
+                    <span style="color: #2ecc71;">2 dakika önce ✓</span>
+                </div>
+
+                <button class="btn" style="width: 100%;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1Z"/>
+                    </svg>
+                    Güvenlik Taraması Başlat
+                </button>
+            </div>
+        </div>
+
+        <!-- Bottom Grid -->
+        <div class="bottom-grid">
+            <!-- Network Performance -->
+            <div class="card">
+                <h3>
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M16,18L22,12L16,6M6,6L0,12L6,18"/>
+                    </svg>
+                    Ağ Performansı
+                </h3>
+
+                <div class="metrics-grid">
+                    <div class="metric-item">
+                        <span class="metric-value">94</span>
+                        <div class="metric-label">Mbps</div>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-value">1.2</span>
+                        <div class="metric-label">ms</div>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-value">0.03</span>
+                        <div class="metric-label">% Loss</div>
+                    </div>
+                </div>
+
+                <div class="network-chart">
+                    <div class="chart-placeholder">
+                        📊 Gerçek zamanlı ağ grafiği<br>
+                        <small>iPerf3 & Wireshark entegrasyonu</small>
+                    </div>
+                </div>
+
+                <div style="margin-top: 15px;">
+                    <div style="display: flex; justify-content: between; margin-bottom: 5px;">
+                        <small>Bant Genişliği Kullanımı</small>
+                        <small>74%</small>
+                    </div>
+                    <div style="background: #ecf0f1; height: 8px; border-radius: 4px;">
+                        <div style="width: 74%; height: 100%; background: linear-gradient(90deg, #3498db, #2ecc71); border-radius: 4px;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Packet Analysis -->
+            <div class="card">
+                <h3>
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M12,2A3,3 0 0,1 15,5V11A3,3 0 0,1 12,14A3,3 0 0,1 9,11V5A3,3 0 0,1 12,2M19,11C19,14.53 16.39,17.44 13,17.93V21H11V17.93C7.61,17.44 5,14.53 5,11H7A5,5 0 0,0 12,16A5,5 0 0,0 17,11H19Z"/>
+                    </svg>
+                    Paket Analizi
+                </h3>
+
+                <div class="tabs">
+                    <div class="tab active">IP Header</div>
+                    <div class="tab">Fragment</div>
+                    <div class="tab">Checksum</div>
+                </div>
+
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.9em;">
+                        <div><strong>TTL:</strong> 64</div>
+                        <div><strong>Protocol:</strong> TCP</div>
+                        <div><strong>Src IP:</strong> 192.168.1.100</div>
+                        <div><strong>Dst IP:</strong> 192.168.1.200</div>
+                        <div><strong>Fragment:</strong> DF=1, MF=0</div>
+                        <div><strong>Checksum:</strong> 0x4A2B ✓</div>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn" style="flex: 1; font-size: 0.85em;">
+                        Paket Yakala
+                    </button>
+                    <button class="btn" style="flex: 1; font-size: 0.85em;">
+                        Analiz Et
+                    </button>
+                </div>
+
+                <div style="margin-top: 15px; font-size: 0.9em;">
+                    <div style="color: #2ecc71; margin-bottom: 5px;">
+                        ✓ Paket bütünlüğü doğrulandı
+                    </div>
+                    <div style="color: #3498db;">
+                        📊 1,247 paket analiz edildi
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Logs -->
+            <div class="card">
+                <h3>
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z"/>
+                    </svg>
+                    Sistem Logları
+                </h3>
+
+                <div class="log-container">
+                    <div class="log-entry log-info">[2025-06-10 14:21:07] INFO: Transfer başlatıldı - dosya1.pdf</div>
+                    <div class="log-entry log-success">[2025-06-10 14:21:08] SUCCESS: AES-256 şifreleme tamamlandı</div>
+                    <div class="log-entry log-info">[2025-06-10 14:21:09] INFO: RSA imza oluşturuldu</div>
+                    <div class="log-entry log-success">[2025-06-10 14:21:12] SUCCESS: Paket fragmentasyonu tamamlandı</div>
+                    <div class="log-entry log-info">[2025-06-10 14:21:15] INFO: Transfer %25 tamamlandı</div>
+                    <div class="log-entry log-warning">[2025-06-10 14:21:18] WARNING: Yavaş bağlantı tespit edildi</div>
+                    <div class="log-entry log-info">[2025-06-10 14:21:19] INFO: TCP protokolüne geçiş yapıldı</div>
+                    <div class="log-entry log-success">[2025-06-10 14:21:22] SUCCESS: Transfer %50 tamamlandı</div>
+                    <div class="log-entry log-info">[2025-06-10 14:21:25] INFO: Bütünlük kontrolü başlatıldı</div>
+                    <div class="log-entry log-success">[2025-06-10 14:21:26] SUCCESS: SHA-256 hash doğrulandı</div>
+                    <div class="log-entry log-success">[2025-06-10 14:21:28] SUCCESS: Transfer başarıyla tamamlandı</div>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button class="btn" style="flex: 1; font-size: 0.85em;">
+                        Logları Temizle
+                    </button>
+                    <button class="btn" style="flex: 1; font-size: 0.85em;">
+                        Dışa Aktar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simulated real-time updates
+        function updateMetrics() {
+            const bandwidth = document.querySelector('.metric-value');
+            const latency = document.querySelectorAll('.metric-value')[1];
+            const loss = document.querySelectorAll('.metric-value')[2];
+            
+            // Simulate fluctuating values
+            const bw = 90 + Math.random() * 10;
+            const lat = 1 + Math.random() * 2;
+            const ls = Math.random() * 0.1;
+            
+            bandwidth.textContent = bw.toFixed(0);
+            latency.textContent = lat.toFixed(1);
+            loss.textContent = ls.toFixed(2);
+        }
+
+        function updateProgress() {
+            const progressFill = document.querySelector('.progress-fill');
+            const progressText = document.querySelector('.progress-text');
+            
+            let currentWidth = parseInt(progressFill.style.width) || 67;
+            if (currentWidth < 100) {
+                currentWidth += Math.random() * 3;
+                if (currentWidth > 100) currentWidth = 100;
+                
+                progressFill.style.width = currentWidth + '%';
+                progressText.textContent = `Transfer İlerliyor: ${currentWidth.toFixed(0)}%`;
+                
+                if (currentWidth >= 100) {
+                    progressText.textContent = 'Transfer Tamamlandı! ✓';
+                    progressFill.style.background = 'linear-gradient(90deg, #2ecc71, #27ae60)';
+                }
+            }
+        }
+
+        function addLogEntry() {
+            const logContainer = document.querySelector('.log-container');
+            const entries = [
+                { type: 'info', msg: 'Heartbeat paketi gönderildi' },
+                { type: 'success', msg: 'Bağlantı kalitesi mükemmel' },
+                { type: 'info', msg: 'Anomali tespiti aktif' },
+                { type: 'success', msg: 'Güvenlik kontrolü tamamlandı' }
+            ];
+            
+            const randomEntry = entries[Math.floor(Math.random() * entries.length)];
+            const now = new Date();
+            const timestamp = now.toLocaleString('tr-TR');
+            
+            const newLog = document.createElement('div');
+            newLog.className = `log-entry log-${randomEntry.type}`;
+            newLog.textContent = `[${timestamp}] ${randomEntry.type.toUpperCase()}: ${randomEntry.msg}`;
+            
+logContainer.appendChild(newLog);
+            
+            // Keep only the last MAX_LOG_ENTRIES
+            while (logContainer.children.length > MAX_LOG_ENTRIES) {
+                logContainer.removeChild(logContainer.children[0]);
+            }
+
+            // Scroll to the bottom to show the latest log entry
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+
+        // File upload drag & drop functionality
+        const fileUploadArea = document.querySelector('.file-upload-area');
+        const fileInput = document.getElementById('fileInput');
+
+        fileUploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault(); // Prevent default to allow drop
+            fileUploadArea.classList.add('dragover');
+        });
+
+        fileUploadArea.addEventListener('dragleave', () => {
+            fileUploadArea.classList.remove('dragover');
+        });
+
+        fileUploadArea.addEventListener('drop', (e) => {
+            e.preventDefault(); // Prevent default to get file access
+            fileUploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            handleFiles(files);
+        });
+
+        // Handle files selected via click (hidden input)
+        fileInput.addEventListener('change', (e) => {
+            const files = e.target.files;
+            handleFiles(files);
+        });
+
+        function handleFiles(files) {
+            if (files.length > 0) {
+                let fileNames = Array.from(files).map(file => file.name).join(', ');
+                alert(`Seçilen dosyalar: ${fileNames}. Yükleme simüle ediliyor...`);
+                
+                // Reset progress bar for a new simulated upload
+                const progressFill = document.querySelector('.progress-fill');
+                const progressText = document.querySelector('.progress-text');
+                progressFill.style.width = '0%';
+                progressFill.style.background = 'linear-gradient(90deg, #3498db, #2ecc71)'; // Reset to initial gradient
+                progressText.textContent = 'Transfer İlerliyor: 0%';
+
+                // Add a log entry for the file selection
+                addLogEntry({ type: 'info', msg: `Dosya(lar) seçildi: ${fileNames}` });
+
+                // You might want to start a new progress simulation here
+                // For this example, the existing `setInterval(updateProgress, 500)` will continue
+                // and gradually increase the progress.
+            }
+        }
+
+        // Tab functionality for Packet Analysis section
+        const tabs = document.querySelectorAll('.tab');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove 'active' class from all tabs
+                tabs.forEach(t => t.classList.remove('active'));
+                // Add 'active' class to the clicked tab
+                tab.classList.add('active');
+                // In a full application, you would show/hide content related to the active tab here.
+                // For this static example, we only toggle the visual active state.
+            });
+        });
+
+        // Initial calls and set intervals for real-time simulation
+        // Ensure DOM is loaded before running these
+        document.addEventListener('DOMContentLoaded', () => {
+            updateMetrics();
+            setInterval(updateMetrics, 2000); // Update network metrics every 2 seconds
+
+            updateProgress();
+            setInterval(updateProgress, 500); // Update transfer progress every 0.5 seconds
+
+            // Call once initially, then set interval for new log entries
+            addLogEntry();
+            setInterval(addLogEntry, 1500); // Add a new log entry every 1.5 seconds
+
+            // Event listeners for "Clear Logs" and "Export" buttons (example)
+            document.querySelector('.log-container + div > .btn:nth-child(1)').addEventListener('click', () => {
+                const logContainer = document.querySelector('.log-container');
+                logContainer.innerHTML = ''; // Clear all log entries
+                alert('Loglar temizlendi.');
+                addLogEntry({ type: 'info', msg: 'Sistem logları temizlendi.' });
+            });
+
+            document.querySelector('.log-container + div > .btn:nth-child(2)').addEventListener('click', () => {
+                const logContainer = document.querySelector('.log-container');
+                const logText = Array.from(logContainer.children).map(log => log.textContent).join('\n');
+                if (logText) {
+                    const blob = new Blob([logText], { type: 'text/plain' });
+                    const a = document.createElement('a');
+                    a.href = URL.createObjectURL(blob);
+                    a.download = 'system_logs.txt';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    alert('Loglar başarıyla dışa aktarıldı (system_logs.txt).');
+                    addLogEntry({ type: 'info', msg: 'Sistem logları dışa aktarıldı.' });
+                } else {
+                    alert('Dışa aktarılacak log bulunmuyor.');
+                }
+            });
+
+            // Re-define addLogEntry to handle both random and specific messages
+            const originalAddLogEntry = addLogEntry;
+            addLogEntry = (specificEntry) => {
+                const logContainer = document.querySelector('.log-container');
+                const MAX_LOG_ENTRIES = 25; 
+                const now = new Date();
+                const timestamp = now.getFullYear() + '-' 
+                                + String(now.getMonth() + 1).padStart(2, '0') + '-' 
+                                + String(now.getDate()).padStart(2, '0') + ' ' 
+                                + String(now.getHours()).padStart(2, '0') + ':' 
+                                + String(now.getMinutes()).padStart(2, '0') + ':' 
+                                + String(now.getSeconds()).padStart(2, '0');
+
+                let entry;
+                if (specificEntry) {
+                    entry = specificEntry;
+                } else {
+                    const entries = [
+                        { type: 'info', msg: 'Heartbeat paketi gönderildi' },
+                        { type: 'success', msg: 'Bağlantı kalitesi mükemmel' },
+                        { type: 'info', msg: 'Anomali tespiti aktif' },
+                        { type: 'success', msg: 'Güvenlik kontrolü tamamlandı' },
+                        { type: 'warning', msg: 'Şüpheli aktivite algılandı' },
+                        { type: 'error', msg: 'RSA anahtar doğrulama hatası' },
+                        { type: 'info', msg: 'Yeni şifreleme anahtarı oluşturuluyor' }
+                    ];
+                    entry = entries[Math.floor(Math.random() * entries.length)];
+                }
+
+                const newLog = document.createElement('div');
+                newLog.className = `log-entry log-${entry.type}`;
+                newLog.textContent = `[${timestamp}] ${entry.type.toUpperCase()}: ${entry.msg}`;
+                
+                logContainer.appendChild(newLog);
+
+                while (logContainer.children.length > MAX_LOG_ENTRIES) {
+                    logContainer.removeChild(logContainer.children[0]);
+                }
+                logContainer.scrollTop = logContainer.scrollHeight;
+            };
+
+            // Call the modified addLogEntry for initial population and intervals
+            originalAddLogEntry(); // to add the initial set of logs
+            setInterval(() => addLogEntry(), 1500); // Continue adding random logs
+        });
+    </script>
+</body>
+</html>
