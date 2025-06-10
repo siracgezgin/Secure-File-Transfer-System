@@ -47,7 +47,7 @@ Sistem, **Separation of Concerns** prensibine uygun olarak dört ana katmandan o
 
 ---
 
-## 🔐 Güvenlik Özellikleri
+## Güvenlik Özellikleri
 
 ### Kriptografik Sistemler
 - **Simetrik Şifreleme**: AES-256-EAX modu
@@ -73,7 +73,7 @@ Sistem, **Separation of Concerns** prensibine uygun olarak dört ana katmandan o
 
 ---
 
-## 🚀 Performans Optimizasyonları
+## Performans Optimizasyonları
 
 ### Akıllı Protokol Seçimi
 ```python
@@ -95,7 +95,7 @@ else:
 
 ---
 
-## 📊 Performans Metrikleri
+## Performans Metrikleri
 
 ### Benchmark Sonuçları
 | Test Ortamı | Throughput | Latency | Paket Kaybı | Güvenlik Skoru |
@@ -113,7 +113,7 @@ else:
 
 ---
 
-## 🤖 Yapay Zeka Entegrasyonu
+## Yapay Zeka Entegrasyonu
 
 ### Anomali Tespit Sistemi
 ```python
@@ -138,7 +138,7 @@ class NetworkAnomalyDetector:
 
 ---
 
-## 🛠️ Teknoloji Stack'i
+## 🛠Teknoloji Stack'i
 
 ### Programlama Dilleri ve Framework'ler
 ```yaml
@@ -169,7 +169,7 @@ Monitoring & Analytics:
 
 ---
 
-## 📦 Kurulum ve Dağıtım
+## Kurulum ve Dağıtım
 
 ### Hızlı Kurulum
 ```bash
@@ -237,7 +237,7 @@ spec:
 
 ---
 
-## 🔍 Kullanım Senaryoları
+## Kullanım Senaryoları
 
 ### Enterprise Senaryoları
 1. **Finansal Kurumlar**
@@ -262,7 +262,7 @@ spec:
 
 ---
 
-## 📈 Gelecek Geliştirmeler
+## Gelecek Geliştirmeler
 
 ### Kısa Vadeli Hedefler (Q1-Q2 2025)
 - [ ] **Mobile SDK**: Android/iOS native kütüphaneler
@@ -284,23 +284,23 @@ spec:
 
 ---
 
-## 🏆 Proje Başarıları ve Tanınma
+## Proje Başarıları ve Tanınma
 
 ### Akademik Başarılar
-- 📊 **Performans İyileştirmesi**: %40 hız artışı
-- 🔒 **Güvenlik Skoru**: 100/100 penetration test başarısı
-- 👥 **Kullanıcı Memnuniyeti**: %92 adoption rate
-- 📚 **Akademik Yayın**: 2 konferans bildirisi kabul edildi
+- **Performans İyileştirmesi**: %40 hız artışı
+- **Güvenlik Skoru**: 100/100 penetration test başarısı
+- **Kullanıcı Memnuniyeti**: %92 adoption rate
+- **Akademik Yayın**: 2 konferans bildirisi kabul edildi
 
 ### Endüstri Etkisi
-- 🏢 **Pilot Projeler**: 5 şirket tarafından test edildi
-- 💰 **Maliyet Tasarrufu**: Ortalama %30 altyapı maliyeti azalması
-- ⚡ **Verimlilik Artışı**: %25 hızlı dosya transfer süreci
-- 🛡️ **Güvenlik İyileştirmesi**: Zero security breach kaydı
+- **Pilot Projeler**: 5 şirket tarafından test edildi
+- **Maliyet Tasarrufu**: Ortalama %30 altyapı maliyeti azalması
+- **Verimlilik Artışı**: %25 hızlı dosya transfer süreci
+- **Güvenlik İyileştirmesi**: Zero security breach kaydı
 
 ---
 
-## 🤝 Katkıda Bulunma
+## Katkıda Bulunma
 
 ### Development Workflow
 ```bash
@@ -326,29 +326,29 @@ git push origin feature/new-encryption-algorithm
 
 ---
 
-## 📞 İletişim ve Destek
+## İletişim ve Destek
 
 ### Proje Ekibi
 - **Proje Lideri**: Siraç Gezgin
-  - 📧 siracgezgin@gmail.com
+  - siracgezgin@gmail.com
   - 💼 [LinkedIn](https://linkedin.com/in/siracgezgin)
   - 🐙 [GitHub](https://github.com/siracgezgin)
 
 ### Destek Kanalları
-- 🐛 **Bug Reports**: GitHub Issues
-- 💡 **Feature Requests**: GitHub Discussions
-- 📖 **Documentation**: Wiki sayfaları
-- 💬 **Community**: Discord sunucusu
+- **Bug Reports**: GitHub Issues
+- **Feature Requests**: GitHub Discussions
+- **Documentation**: Wiki sayfaları
+- **Community**: Discord sunucusu
 
 ### Kurumsal Destek
-- 📊 **Consulting**: Kurumsal implementasyon danışmanlığı
-- 🎓 **Training**: Teknik eğitim programları
-- 🔧 **Custom Development**: Özel geliştirme hizmetleri
-- 🛡️ **Security Audit**: Güvenlik değerlendirme hizmetleri
+- **Consulting**: Kurumsal implementasyon danışmanlığı
+- **Training**: Teknik eğitim programları
+- **Custom Development**: Özel geliştirme hizmetleri
+- **Security Audit**: Güvenlik değerlendirme hizmetleri
 
 ---
 
-## 📜 Lisans ve Yasal Bilgiler
+## Lisans ve Yasal Bilgiler
 
 Bu proje **MIT Lisansı** altında lisanslanmıştır. Ticari kullanım için ek kısıtlamalar bulunmamaktadır.
 
